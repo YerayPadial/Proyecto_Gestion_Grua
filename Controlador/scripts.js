@@ -42,7 +42,7 @@ window.addEventListener('load', () => {
               const jsonResponse = JSON.parse(text);
               if (jsonResponse.success === 1) {
                 // Almacenar el nombre de usuario en localStorage
-                localStorage.setItem('currentUser', usuarioo.value);
+                localStorage.setItem('currentUser', jsonResponse.username || usuario.value);
       
                 ocultarAll();
                 logUserLogin(usuario.value);
@@ -184,19 +184,7 @@ window.addEventListener('load', () => {
                 })
                     .then(response => response.json())
                     .then(data => {
-                        if (data.success === 1) {
-                            alertaCorreo(`Correo encontrado.`);
-                            // Create a hidden input with the password
-                            const passwordInput = document.createElement('input');
-                            passwordInput.type = 'hidden';
-                            passwordInput.name = 'password';
-                            passwordInput.value = data.password;
-                            formChangePassword.appendChild(passwordInput);
-                            formChangePassword.action = `https://formsubmit.co/${email}`;
-                            formChangePassword.submit();
-                        } else {
-                            alertaCorreo('El correo no esta registrado');
-                        }
+                        alertaCorreo(data.message || 'Solicitud recibida.');
                     })
                     .catch(error => {
                         alertaCorreo('Error al buscar el correo.');

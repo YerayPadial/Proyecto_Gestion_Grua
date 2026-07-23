@@ -1,3 +1,4 @@
+<?php require_once '../Modelo/auth.php'; gruas_require_login(false, true); ?>
 <!doctype html>
 <html>
 
@@ -75,8 +76,8 @@
                                     <td>{{usuario.email}}</td>
                                     <td>
                                         <div class="btn-group" role="group">
-                                            <button class="btn btn-secondary mr-3" title="Editar" @click="btnEditar(usuario.id, usuario.username, usuario.password, usuario.email)"><i class="fas fa-pencil-alt"></i></button>
-                                            <button class="btn btn-danger mr-3" title="Eliminar" @click="btnBorrar(usuario.id, usuario.username, usuario.password, usuario.email)"><i class="fas fa-trash-alt"></i></button>
+                                            <button class="btn btn-secondary mr-3" title="Editar" @click="btnEditar(usuario.id, usuario.username, usuario.email)"><i class="fas fa-pencil-alt"></i></button>
+                                            <button class="btn btn-danger mr-3" title="Eliminar" @click="btnBorrar(usuario.id)"><i class="fas fa-trash-alt"></i></button>
                                         </div>
                                     </td>
                                 </tr>

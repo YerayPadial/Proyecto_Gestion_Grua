@@ -10,7 +10,7 @@ if ($conn->connect_error) {
 
 if (isset($_POST['usuarioNew']) && !empty($_POST['usuarioNew']) && isset($_POST['passwordNew']) && !empty($_POST['passwordNew']) && isset($_POST['correoNew']) && !empty($_POST['correoNew'])) {
     $usuarioNew = $_POST['usuarioNew'];
-    $passwordNew = $_POST['passwordNew'];
+    $passwordNew = password_hash($_POST['passwordNew'], PASSWORD_DEFAULT);
     $correoNew = $_POST['correoNew'];
 
     $query = "SELECT * FROM users WHERE username=?";

@@ -24,10 +24,11 @@ if (!currentUser) {
 }
 
 function logout() {
-    // Eliminar la cookie 'currentUser'
-    document.cookie = "currentUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    // Redirigir al index.html
-    window.location.href = '../index.html';
+    fetch('../Controlador/logout.php', { method: 'POST' }).finally(() => {
+        document.cookie = "currentUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        localStorage.removeItem('currentUser');
+        window.location.href = '../index.html';
+    });
 }
 var appLogs = new Vue({
     el: "#appLogs", // Elemento HTML donde se montará la aplicación Vue

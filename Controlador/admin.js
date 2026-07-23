@@ -1,4 +1,12 @@
 var urlLogs = "../Modelo/logs.php";
+
+function escapeAttr(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
 // Función para registrar acciones de los usuarios
 function logAction(currentUser, action) {
   console.log('logAction called with:', currentUser, action); // Agregar log para verificar los parámetros
@@ -65,10 +73,11 @@ if (!currentUser) {
 }
 
 function logout() {
-  // Eliminar la cookie 'currentUser'
-  document.cookie = "currentUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-  // Redirigir al index.html
-  window.location.href = '../index.html';
+  fetch('../Controlador/logout.php', { method: 'POST' }).finally(() => {
+    document.cookie = "currentUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    localStorage.removeItem('currentUser');
+    window.location.href = '../index.html';
+  });
 }
 
 var appUsuarios = new Vue({
@@ -128,14 +137,17 @@ var appUsuarios = new Vue({
       }
     },
     // Método para el boton de editar (actualizar un registro existente)
-    btnEditar: async function (id, username, password, email) {
+    btnEditar: async function (id, username, email) {
+      id = escapeAttr(id);
+      username = escapeAttr(username);
+      email = escapeAttr(email);
       await Swal.fire({
         title: 'Registro: ' + id,
         html:
           '<div class="form-group">' +
           '<div class="row"><label class="col-sm-3 col-form-label">ID</label><div class="col-sm-9"><input id="id" value="' + id + '" type="text" class="form-control" readonly></div></div>' +
           '<div class="row"><label class="col-sm-3 col-form-label">Username</label><div class="col-sm-9"><input id="username" value="' + username + '" type="text" class="form-control"></div></div>' +
-          '<div class="row"><label class="col-sm-3 col-form-label">Password</label><div class="col-sm-9"><input id="password" value="' + password + '" type="password" class="form-control"></div></div>' +
+          '<div class="row"><label class="col-sm-3 col-form-label">Nueva password</label><div class="col-sm-9"><input id="password" placeholder="Dejar en blanco para no cambiar" type="password" class="form-control"></div></div>' +
           '<div class="row"><label class="col-sm-3 col-form-label">Email</label><div class="col-sm-9"><input id="email" value="' + email + '" type="email" class="form-control"></div></div>' +
           '</div>',
         focusConfirm: false,

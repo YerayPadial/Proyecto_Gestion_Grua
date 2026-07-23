@@ -1,4 +1,6 @@
 <?php
+require_once 'auth.php';
+gruas_require_login(true);
 include_once 'conexion.php'; // Incluye el archivo de conexión a la base de datos
 $objeto = new Conexion(); // Crea una nueva instancia de la clase Conexion
 $conexion = $objeto->Conectar(); // Establece la conexión a la base de datos
@@ -31,22 +33,29 @@ $importeretirada = (isset($_POST['importeretirada'])) ? $_POST['importeretirada'
 $importedeposito = (isset($_POST['importedeposito'])) ? $_POST['importedeposito'] : '';
 $total = (isset($_POST['total'])) ? $_POST['total'] : '';
 $opcionespago = (isset($_POST['opcionespago'])) ? $_POST['opcionespago'] : '';
+$data = [];
 
 switch ($opcion) { // Evalúa la variable $opcion para determinar qué operación realizar
     case 1: // Opción 1: Insertar un nuevo registro en la tabla 'vehiculos'
-        $consulta = "INSERT INTO vehiculos (id, fechaentrada, fechasalida, lugar, direccion, agente, matricula, marca, modelo, color, motivo, tipovehiculo, grua, estado) VALUES('$id', '$fechaentrada', '$fechasalida', '$lugar', '$direccion', '$agente', '$matricula', '$marca', '$modelo', '$color', '$motivo', '$tipovehiculo', '$grua', '$estado') ";
+        $consulta = "INSERT INTO vehiculos (id, fechaentrada, fechasalida, lugar, direccion, agente, matricula, marca, modelo, color, motivo, tipovehiculo, grua, estado) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $resultado = $conexion->prepare($consulta); // Prepara la consulta SQL
+        $resultado->bind_param("ssssssssssssss", $id, $fechaentrada, $fechasalida, $lugar, $direccion, $agente, $matricula, $marca, $modelo, $color, $motivo, $tipovehiculo, $grua, $estado);
         $resultado->execute(); // Ejecuta la consulta
+        $data = ['status' => 'success'];
         break;
     case 2: // Opción 2: Actualizar un registro existente en la tabla 'vehiculos'
-        $consulta = "UPDATE vehiculos SET fechaentrada='$fechaentrada', fechasalida='$fechasalida', lugar='$lugar', direccion='$direccion', agente='$agente', matricula='$matricula', marca='$marca', modelo='$modelo', color='$color', motivo='$motivo', tipovehiculo='$tipovehiculo', grua='$grua', estado='$estado' WHERE id='$id' ";
+        $consulta = "UPDATE vehiculos SET fechaentrada=?, fechasalida=?, lugar=?, direccion=?, agente=?, matricula=?, marca=?, modelo=?, color=?, motivo=?, tipovehiculo=?, grua=?, estado=? WHERE id=?";
         $resultado = $conexion->prepare($consulta); // Prepara la consulta SQL
+        $resultado->bind_param("ssssssssssssss", $fechaentrada, $fechasalida, $lugar, $direccion, $agente, $matricula, $marca, $modelo, $color, $motivo, $tipovehiculo, $grua, $estado, $id);
         $resultado->execute(); // Ejecuta la consulta
+        $data = ['status' => 'success'];
         break;
     case 3: // Opción 3: Eliminar un registro de la tabla 'vehiculos'
-        $consulta = "DELETE FROM vehiculos WHERE id='$id' ";
+        $consulta = "DELETE FROM vehiculos WHERE id=?";
         $resultado = $conexion->prepare($consulta); // Prepara la consulta SQL
+        $resultado->bind_param("s", $id);
         $resultado->execute(); // Ejecuta la consulta
+        $data = ['status' => 'success'];
         break;
     case 4: // Opción 4: Seleccionar todos los registros de la tabla 'vehiculos'
         $consulta = "SELECT id, fechaentrada, fechasalida, lugar, direccion, agente, matricula, marca, modelo, color, motivo, tipovehiculo, grua, estado FROM vehiculos";
@@ -55,15 +64,28 @@ switch ($opcion) { // Evalúa la variable $opcion para determinar qué operació
         $data = $resultado->get_result()->fetch_all(MYSQLI_ASSOC); // Obtiene todos los resultados de la consulta en un array asociativo
         break;
     case 5: // Nueva opción para insertar una retirada
-        $consulta = "INSERT INTO retiradas (idvehiculos, nombre, nif, domicilio, poblacion, provincia, permiso, fecha, agente, importeretirada, importedeposito, total, opcionespago) VALUES ('$idvehiculos', '$nombre', '$nif', '$domicilio', '$poblacion', '$provincia', '$permiso', '$fecha', '$agente', '$importeretirada', '$importedeposito', '$total', '$opcionespago')";
-        $resultado = $conexion->prepare($consulta);
-        $resultado->execute();
-        // Actualizar el estado del vehículo a "Liquidado"
-        $consulta = "UPDATE vehiculos SET estado='Liquidado' WHERE id='$idvehiculos'";
-        $resultado = $conexion->prepare($consulta);
-        $resultado->execute();
+        $conexion->begin_transaction();
+        try {
+            $consulta = "INSERT INTO retiradas (idvehiculos, nombre, nif, domicilio, poblacion, provincia, permiso, fecha, agente, importeretirada, importedeposito, total, opcionespago) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $resultado = $conexion->prepare($consulta);
+            $resultado->bind_param("sssssssssddds", $idvehiculos, $nombre, $nif, $domicilio, $poblacion, $provincia, $permiso, $fecha, $agente, $importeretirada, $importedeposito, $total, $opcionespago);
+            $resultado->execute();
+
+            $consulta = "UPDATE vehiculos SET estado='Liquidado' WHERE id=?";
+            $resultado = $conexion->prepare($consulta);
+            $resultado->bind_param("s", $idvehiculos);
+            $resultado->execute();
+
+            $conexion->commit();
+            $data = ['status' => 'success'];
+        } catch (Throwable $e) {
+            $conexion->rollback();
+            http_response_code(500);
+            $data = ['status' => 'error', 'message' => 'No se pudo guardar la retirada'];
+        }
         break;
     case 6: // Opción 6: Seleccionar todos los registros de la tabla 'retiradas'
+        gruas_require_login(true, true);
         $consulta = "SELECT idvehiculos, nombre, nif, domicilio, poblacion, provincia, permiso, fecha, agente, importeretirada, importedeposito, total, opcionespago FROM retiradas";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();

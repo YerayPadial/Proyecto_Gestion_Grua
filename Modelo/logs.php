@@ -1,4 +1,5 @@
 <?php
+require_once 'auth.php';
 include_once 'conexion.php'; // Incluye el archivo de conexión a la base de datos
 $objeto = new Conexion(); // Crea una nueva instancia de la clase Conexion
 $conexion = $objeto->Conectar(); // Establece la conexión a la base de datos
@@ -16,6 +17,7 @@ $data = ['status' => 'error', 'message' => 'Opción no válida'];
 
 switch ($opcion) {
     case 1: // Seleccionar todos los registros
+        gruas_require_login(true, true);
         $consulta = "SELECT id, username, login_time, action FROM user_logs";
         $resultado = $conexion->prepare($consulta);
         if ($resultado->execute()) {
@@ -26,9 +28,11 @@ switch ($opcion) {
         break;
 
     case 2: // Eliminar un registro
+        gruas_require_login(true, true);
         $id = (isset($_POST['id'])) ? $_POST['id'] : '';
-        $consulta = "DELETE FROM user_logs WHERE id='$id'";
+        $consulta = "DELETE FROM user_logs WHERE id=?";
         $resultado = $conexion->prepare($consulta);
+        $resultado->bind_param("i", $id);
         if ($resultado->execute()) {
             $data = ['status' => 'success', 'message' => 'Log eliminado correctamente'];
         } else {
@@ -37,13 +41,20 @@ switch ($opcion) {
         break;
 
         case 3: // Insertar un nuevo log
+            gruas_require_login(true);
+            $currentUser = gruas_current_user();
+            $username = $currentUser ?: $username;
             // Verificar si el username existe en la tabla users
-            $consulta_verificar = "SELECT username FROM users WHERE username = '$username'";
-            $resultado_verificar = $conexion->query($consulta_verificar);
+            $consulta_verificar = "SELECT username FROM users WHERE username = ?";
+            $resultado_verificar = $conexion->prepare($consulta_verificar);
+            $resultado_verificar->bind_param("s", $username);
+            $resultado_verificar->execute();
+            $resultado_verificar = $resultado_verificar->get_result();
             if ($resultado_verificar->num_rows > 0) {
                 // El username existe, proceder con la inserción
-                $consulta = "INSERT INTO user_logs (username, login_time, action) VALUES ('$username', NOW(), '$action')";
+                $consulta = "INSERT INTO user_logs (username, login_time, action) VALUES (?, NOW(), ?)";
                 $resultado = $conexion->prepare($consulta);
+                $resultado->bind_param("ss", $username, $action);
                 if ($resultado->execute()) {
                     $data = ['status' => 'success', 'message' => 'Log guardado correctamente'];
                 } else {

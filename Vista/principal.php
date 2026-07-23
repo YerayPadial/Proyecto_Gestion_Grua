@@ -1,3 +1,4 @@
+<?php require_once '../Modelo/auth.php'; gruas_require_login(); ?>
 <!doctype html>
 <html>
 
@@ -74,13 +75,13 @@
                                     <td>{{vehiculo.id}}</td>
                                     <td>{{vehiculo.fechaentrada}}</td>
                                     <td>{{vehiculo.matricula}}</td>
-                                    <td :class="{'estado-en-deposito': vehiculo.estado === 'En deposito', 'estado-liquidado': vehiculo.estado === 'Liquidado'}">{{vehiculo.estado}}</td>
+                                    <td :class="{'estado-en-deposito': vehiculo.estado === 'En deposito' || vehiculo.estado === 'En depósito', 'estado-liquidado': vehiculo.estado === 'Liquidado'}">{{vehiculo.estado}}</td>
                                     <td>
                                         <div class="btn-group" role="group">
                                             <button class="btn btn-info mr-3" title="Ver" @click="btnVer(vehiculo.id, vehiculo.fechaentrada, vehiculo.fechasalida, vehiculo.lugar, vehiculo.direccion, vehiculo.agente, vehiculo.matricula, vehiculo.marca, vehiculo.modelo, vehiculo.color, vehiculo.motivo, vehiculo.tipovehiculo, vehiculo.grua, vehiculo.estado)"><i class="fas fa-eye"></i></button>
                                             <button class="btn btn-secondary mr-3" title="Editar" @click="btnEditar(vehiculo.id, vehiculo.fechaentrada, vehiculo.fechasalida, vehiculo.lugar, vehiculo.direccion, vehiculo.agente, vehiculo.matricula, vehiculo.marca, vehiculo.modelo, vehiculo.color, vehiculo.motivo, vehiculo.tipovehiculo, vehiculo.grua, vehiculo.estado)"><i class="fas fa-pencil-alt"></i></button>
                                             <button class="btn btn-danger mr-3" title="Eliminar" @click="btnBorrar(vehiculo.id)"><i class="fas fa-trash-alt"></i></button>
-                                            <button v-if="vehiculo.estado === 'En deposito'" class="btn btn-warning" title="Retirar" @click="btnRetirar(vehiculo.id, vehiculo.matricula, vehiculo.agente, vehiculo.tipovehiculo, vehiculo.fechaentrada)"><i class="fas fa-sign-out-alt"></i></button>
+                                            <button v-if="vehiculo.estado === 'En deposito' || vehiculo.estado === 'En depósito'" class="btn btn-warning" title="Retirar" @click="btnRetirar(vehiculo.id, vehiculo.matricula, vehiculo.agente, vehiculo.tipovehiculo, vehiculo.fechaentrada)"><i class="fas fa-sign-out-alt"></i></button>
                                         </div>
                                     </td>
                                 </tr>

@@ -1,5 +1,6 @@
 <?php
-session_start();
+require_once 'auth.php';
+gruas_start_session();
 // Habilitar el reporte de errores para depuración
 error_reporting(E_ALL);
 ini_set('display_errors', 1);

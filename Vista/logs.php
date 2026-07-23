@@ -1,3 +1,4 @@
+<?php require_once '../Modelo/auth.php'; gruas_require_login(false, true); ?>
 <!doctype html>
 <html>
 

@@ -1,4 +1,12 @@
 var urlLogs = "../Modelo/logs.php";
+
+function escapeAttr(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
 // Función para registrar acciones de los usuarios
 function logAction(currentUser, action) {
   console.log('logAction called with:', currentUser, action); // Agregar log para verificar los parámetros
@@ -62,10 +70,11 @@ if (!currentUser) {
 }
 
 function logout() {
-  // Eliminar la cookie 'currentUser'
-  document.cookie = "currentUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-  // Redirigir al index.html
-  window.location.href = '../index.html';
+  fetch('../Controlador/logout.php', { method: 'POST' }).finally(() => {
+    document.cookie = "currentUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    localStorage.removeItem('currentUser');
+    window.location.href = '../index.html';
+  });
 }
 
 var url = "../Modelo/crud.php"; // URL del archivo PHP que maneja las operaciones CRUD
@@ -91,6 +100,7 @@ var appRetiradas = new Vue({
     },
     btnVer: function (retirada) {
       console.log('btnVer called with:', retirada); // Agregar log para verificar el parámetro retirada
+      retirada = Object.fromEntries(Object.entries(retirada).map(([key, value]) => [key, escapeAttr(value)]));
       Swal.fire({
         title: 'Detalles de la Retirada',
         html:

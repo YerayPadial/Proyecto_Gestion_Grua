@@ -1,5 +1,13 @@
 var url = "../Modelo/crud.php"; // URL del archivo PHP que maneja las operaciones CRUD
 
+function escapeAttr(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
 //Coockies para evitar entrar mediante url
 function getCookie(name) {
   let cookieArr = document.cookie.split(";");
@@ -26,10 +34,11 @@ if (!currentUser) {
 }
 
 function logout() {
-  // Eliminar la cookie 'currentUser'
-  document.cookie = "currentUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-  // Redirigir al index.html
-  window.location.href = '../index.html';
+  fetch('../Controlador/logout.php', { method: 'POST' }).finally(() => {
+    document.cookie = "currentUser=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    localStorage.removeItem('currentUser');
+    window.location.href = '../index.html';
+  });
 }
 
 //hasta aqui 
@@ -109,7 +118,7 @@ var appVehiculos = new Vue({
           '<div class="row"><label class="col-sm-3 col-form-label">Motivo</label><div class="col-sm-9"><input id="motivo" type="text" class="form-control"></div></div>' +
           '<div class="row"><label class="col-sm-3 col-form-label">Tipo Vehículo</label><div class="col-sm-9"><select id="tipovehiculo" class="form-control"><option value="Motocicleta, aperos, motocarros y similares">Motocicleta, aperos, motocarros y similares</option><option value="Turismo hasta 12 cv o Remolques hasta 750 kg">Turismo hasta 12 cv o Remolques hasta 750 kg</option><option value="Turismos más de 12 cv o Remolques más de 750 kg">Turismos más de 12 cv o Remolques más de 750 kg</option><option value="Vehículos especiales">Vehículos especiales</option><option value="Vehículos de cortesía">Vehículos de cortesía</option><option value="Chatarra">Chatarra</option></select></div></div>' +
           '<div class="row"><label class="col-sm-3 col-form-label">Grua</label><div class="col-sm-9"><select id="grua" class="form-control"><option value="Grua H01">Grua H01</option><option value="Grua H02">Grua H02</option><option value="Grua H03">Grua H03</option></select></div></div>' +
-          '<div class="row"><label class="col-sm-3 col-form-label">Estado</label><div class="col-sm-9"><select id="estado" class="form-control"><option value="En deposito">En deposito</option><option value="Liquidado">Liquidado</option></select></div></div>',
+          '<div class="row"><label class="col-sm-3 col-form-label">Estado</label><div class="col-sm-9"><select id="estado" class="form-control"><option value="En depósito">En depósito</option><option value="Liquidado">Liquidado</option></select></div></div>',
         focusConfirm: false,
         showCancelButton: true,
         confirmButtonText: 'Guardar',
@@ -159,6 +168,20 @@ var appVehiculos = new Vue({
     },
     // Método para el boton de editar (actualizar un registro existente)
     btnEditar: async function (id, fechaentrada, fechasalida, lugar, direccion, agente, matricula, marca, modelo, color, motivo, tipovehiculo, grua, estado) {
+      id = escapeAttr(id);
+      fechaentrada = escapeAttr(fechaentrada);
+      fechasalida = escapeAttr(fechasalida);
+      lugar = escapeAttr(lugar);
+      direccion = escapeAttr(direccion);
+      agente = escapeAttr(agente);
+      matricula = escapeAttr(matricula);
+      marca = escapeAttr(marca);
+      modelo = escapeAttr(modelo);
+      color = escapeAttr(color);
+      motivo = escapeAttr(motivo);
+      tipovehiculo = escapeAttr(tipovehiculo);
+      grua = escapeAttr(grua);
+      estado = escapeAttr(estado);
       const currentDate = new Date().toISOString().slice(0, 16); // Obtener la fecha y hora actual en formato adecuado para el input datetime-local
       await Swal.fire({
         title: 'Registro: ' + id,
@@ -188,7 +211,7 @@ var appVehiculos = new Vue({
           '<option value="Grua H03"' + (grua === 'Grua H03' ? ' selected' : '') + '>Grua H03</option>' +
           '</select></div></div>' +
           '<div class="row"><label class="col-sm-3 col-form-label">Estado</label><div class="col-sm-9"><select id="estado" class="form-control">' +
-          '<option value="En deposito"' + (estado === 'En deposito' ? ' selected' : '') + '>En deposito</option>' +
+          '<option value="En depósito"' + (estado === 'En deposito' || estado === 'En depósito' ? ' selected' : '') + '>En depósito</option>' +
           '<option value="Liquidado"' + (estado === 'Liquidado' ? ' selected' : '') + '>Liquidado</option>' +
           '</select></div></div>' +
           '</div>',
@@ -248,6 +271,20 @@ var appVehiculos = new Vue({
     },
     // Método para ver los detalles de un vehículo
     btnVer: async function (id, fechaentrada, fechasalida, lugar, direccion, agente, matricula, marca, modelo, color, motivo, tipovehiculo, grua, estado) {
+      id = escapeAttr(id);
+      fechaentrada = escapeAttr(fechaentrada);
+      fechasalida = escapeAttr(fechasalida);
+      lugar = escapeAttr(lugar);
+      direccion = escapeAttr(direccion);
+      agente = escapeAttr(agente);
+      matricula = escapeAttr(matricula);
+      marca = escapeAttr(marca);
+      modelo = escapeAttr(modelo);
+      color = escapeAttr(color);
+      motivo = escapeAttr(motivo);
+      tipovehiculo = escapeAttr(tipovehiculo);
+      grua = escapeAttr(grua);
+      estado = escapeAttr(estado);
       await Swal.fire({
         title: 'Registro: ' + id,
         html:
@@ -274,7 +311,7 @@ var appVehiculos = new Vue({
           '<option value="Grua H03"' + (grua === 'Grua H03' ? ' selected' : '') + '>Grua H03</option>' +
           '</select></div></div>' +
           '<div class="row"><label class="col-sm-3 col-form-label">Estado</label><div class="col-sm-9"><select id="estado" class="form-control" disabled>' +
-          '<option value="En deposito"' + (estado === 'En deposito' ? ' selected' : '') + '>En deposito</option>' +
+          '<option value="En depósito"' + (estado === 'En deposito' || estado === 'En depósito' ? ' selected' : '') + '>En depósito</option>' +
           '<option value="Liquidado"' + (estado === 'Liquidado' ? ' selected' : '') + '>Liquidado</option>' +
           '</select></div></div>',
         focusConfirm: false,
@@ -607,7 +644,7 @@ var appVehiculos = new Vue({
   computed: {
     totalVehiculos() {
       // Filtrar los vehículos que están en depósito y contar la cantidad
-      return this.vehiculos.filter(vehiculo => vehiculo.estado === "En deposito").length;
+      return this.vehiculos.filter(vehiculo => vehiculo.estado === "En deposito" || vehiculo.estado === "En depósito").length;
     }
   }
 });

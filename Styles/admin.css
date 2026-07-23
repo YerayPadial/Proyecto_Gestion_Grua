@@ -1,264 +1,53 @@
-body {
-  background: #f4f4f4;
-  font-family: 'Arial', sans-serif;
-}
+@import url('./main.css');
 
-/* Estilos DataTable */
-#usuariosTable {
+#usuariosTable,
+#retiradasTable,
+#logsTable {
   width: 100% !important;
-  table-layout: auto;
-  border-collapse: separate;
-  border-spacing: 0;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border: 1px solid #000 !important; /* Borde negro fino */
+  margin: 0 !important;
+  border-collapse: collapse;
 }
 
-#usuariosTable thead {
-  background-color: #000 !important; /* Fondo negro para el encabezado */
-  color: #fff !important; /* Letras blancas */
-}
-
-#usuariosTable_wrapper {
+#usuariosTable_wrapper,
+#retiradasTable_wrapper,
+#logsTable_wrapper {
   width: 100%;
-  overflow-x: auto;
 }
 
+#usuariosTable thead th,
+#retiradasTable thead th,
+#logsTable thead th,
 #usuariosTable th,
-#usuariosTable td {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-#usuariosTable th {
-  background-color: #000 !important; /* Fondo negro para las cabeceras */
-  color: white !important;
-  font-weight: bold;
-  border-bottom: 2px solid #000 !important; /* Borde negro */
-}
-
-#usuariosTable tr:nth-child(even) {
-  background-color: #f8f9fa !important;
-}
-
-#usuariosTable tr:hover {
-  background-color: #e9ecef !important;
-}
-
-/* Estilos DataTable */
-#retiradasTable {
-  width: 100% !important;
-  table-layout: auto;
-  border-collapse: separate;
-  border-spacing: 0;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border: 1px solid #000 !important; /* Borde negro fino */
-}
-
-#retiradasTable thead {
-  background-color: #000 !important; /* Fondo negro para el encabezado */
-  color: #fff !important; /* Letras blancas */
-}
-
-#retiradasTable_wrapper {
-  width: 100%;
-  overflow-x: auto;
-}
-
 #retiradasTable th,
-#retiradasTable td {
+#logsTable th {
+  border: 0 !important;
+  color: #fff !important;
+  background: #202028 !important;
+  font-size: .78rem;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+#usuariosTable td,
+#retiradasTable td,
+#logsTable td {
+  max-width: 260px;
+  color: var(--text);
+  vertical-align: middle;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  border-color: #eee8ee;
 }
 
-#retiradasTable th {
-  background-color: #000 !important; /* Fondo negro para las cabeceras */
-  color: white !important;
-  font-weight: bold;
-  border-bottom: 2px solid #000 !important; /* Borde negro */
+#usuariosTable tr:nth-child(even),
+#retiradasTable tr:nth-child(even),
+#logsTable tr:nth-child(even) {
+  background-color: var(--panel-alt) !important;
 }
 
-#retiradasTable tr:nth-child(even) {
-  background-color: #f8f9fa !important;
-}
-
-#retiradasTable tr:hover {
-  background-color: #e9ecef !important;
-}
-
-/* Estilos para los botones */
-.btn-success {
-  background-color: #e83e8c !important; /* Rosa para botones principales */
-  border-color: #e83e8c !important;
-}
-
-.btn-success:hover {
-  background-color: #d63384 !important; /* Rosa oscuro */
-  border-color: #d63384 !important;
-}
-
-.btn-success:focus, .btn-success.focus {
-  box-shadow: 0 0 0 0.2rem rgba(232, 62, 140, 0.5) !important;
-}
-
-.btn-success.disabled, .btn-success:disabled {
-  background-color: #e83e8c !important;
-  border-color: #e83e8c !important;
-}
-
-.btn-success:not(:disabled):not(.disabled):active, .btn-success:not(:disabled):not(.disabled).active,
-.show > .btn-success.dropdown-toggle {
-  background-color: #d63384 !important;
-  border-color: #d63384 !important;
-}
-
-.btn-info {
-  background-color: #343a40; /* Gris oscuro para botones secundarios */
-  border-color: #343a40;
-}
-
-.btn-secondary {
-  background-color: #6c757d;
-  border-color: #6c757d;
-}
-
-.btn-danger {
-  background-color: #dc3545;
-  border-color: #dc3545;
-}
-
-.btn {
-  margin: 2px;
-  border-radius: 4px;
-}
-
-.btn-custom {
-  background-color: transparent !important; /* Fondo transparente */
-  border: 2px solid #000 !important; /* Borde negro */
-  color: #000 !important; /* Color del texto negro */
-}
-
-.btn-custom i {
-  color: #000 !important; /* Color del ícono negro */
-}
-
-.btn-custom:hover {
-  background-color: #e83e8c !important; /* Fondo rosa al hacer hover */
-  border-color: #e83e8c !important; /* Borde rosa al hacer hover */
-  color: #fff !important; /* Color del texto blanco al hacer hover */
-}
-
-.btn-custom:hover i {
-  color: #fff !important; /* Color del ícono blanco al hacer hover */
-}
-
-/* Estilos para los badges */
-.badge-success {
-  background-color: #e83e8c !important; /* Rosa */
-}
-
-a.badge-success:hover, a.badge-success:focus {
-  background-color: #d63384 !important; /* Rosa oscuro */
-}
-
-.badge-primary {
-  background-color: #007bff;
-}
-
-/* Estilos para el header */
-header {
-  background-color: #000000; /* Negro para el header */
-  color: white;
-  padding: 15px 0;
-  border-radius: 8px;
-  margin-bottom: 20px;
-}
-
-header h2 {
-  margin: 0;
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.en-deposito {
-  background-color: green;
-  color: white;
-}
-
-.liquidado {
-  background-color: transparent !important; /* Sin fondo */
-  color: black !important; /* Letras negras */
-  text-decoration: underline !important; /* Subrayado */
-  text-decoration-color: #e83e8c !important; /* Subrayado rosa */
-}
-
-.estado-en-deposito {
-  color: white;
-  background-color: #6c757d; 
-  padding: 2px 5px;
-  border-radius: 3px;
-  font-weight: bold;
-  text-align: center;
-  font-size: 12px; 
-}
-
-.estado-liquidado {
-  color: black !important; /* Letras negras */
-  background-color: transparent !important; /* Sin fondo */
-  padding: 2px 5px;
-  border-radius: 3px;
-  font-weight: bold;
-  text-align: center;
-  font-size: 12px;
-  text-decoration: underline !important; /* Subrayado */
-  text-decoration-color: #e83e8c !important; /* Subrayado rosa */
-}
-
-/* Estilos para el navbar */
-.navbar {
-  background-color: #000000 !important; /* Negro para el navbar */
-  color: white !important;
-}
-
-.navbar-brand, .nav-link {
-  color: white !important;
-}
-
-.nav-link:hover {
-  color: #e83e8c !important; /* Rosa al hacer hover */
-}
-
-/* Alertas */
-.alert-success {
-  color: #842029 !important;
-  background-color: #f8d7da !important;
-  border-color: #f5c2c7 !important;
-}
-
-.alert-success hr {
-  border-top-color: #f1b0b7 !important;
-}
-
-.alert-success .alert-link {
-  color: #6a1b1d !important;
-}
-
-/* Otros elementos */
-.text-success {
-  color: #e83e8c !important; /* Rosa */
-}
-
-.bg-success {
-  background-color: #e83e8c !important; /* Rosa */
-}
-
-a.bg-success:hover, a.bg-success:focus,
-button.bg-success:hover,
-button.bg-success:focus {
-  background-color: #d63384 !important; /* Rosa oscuro */
+#usuariosTable tbody tr:hover,
+#retiradasTable tbody tr:hover,
+#logsTable tbody tr:hover {
+  background-color: #fff1f7 !important;
 }

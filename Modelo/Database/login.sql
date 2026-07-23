@@ -9,24 +9,7 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(100) NOT NULL UNIQUE
 );
 
--- Insert some example users
-INSERT INTO users (username, password, email) VALUES ('user1', 'password1', 'user1@example.com');
-INSERT INTO users (username, password, email) VALUES ('user2', 'password2', 'user2@example.com');
-INSERT INTO users (username, password, email) VALUES ('user3', 'password3', 'user3@example.com');
-INSERT INTO users (username, password, email) VALUES ('user4', 'password4', 'user4@example.com');
-INSERT INTO users (username, password, email) VALUES ('user5', 'password5', 'user5@example.com');
-INSERT INTO users (username, password, email) VALUES ('user6', 'password6', 'user6@example.com');
-INSERT INTO users (username, password, email) VALUES ('user7', 'password7', 'user7@example.com');
-INSERT INTO users (username, password, email) VALUES ('user8', 'password8', 'user8@example.com');
-INSERT INTO users (username, password, email) VALUES ('user9', 'password9', 'user9@example.com');
-INSERT INTO users (username, password, email) VALUES ('user10', 'password10', 'user10@example.com');
-INSERT INTO users (username, password, email) VALUES ('user11', 'password11', 'user11@example.com');
-INSERT INTO users (username, password, email) VALUES ('user12', 'password12', 'user12@example.com');
-INSERT INTO users (username, password, email) VALUES ('user13', 'password13', 'user13@example.com');
-INSERT INTO users (username, password, email) VALUES ('user14', 'password14', 'user14@example.com');
-INSERT INTO users (username, password, email) VALUES ('user15', 'password15', 'user15@example.com');
-INSERT INTO users (username, password, email) VALUES ('admin', 'admin', 'admin@example.com');
-INSERT INTO users (username, password, email) VALUES ('user', 'user123', 'ypadbor947@g.educaand.es');
+-- Users must be created by the application so passwords are stored with password_hash().
 
 
 DROP TABLE IF EXISTS user_logs;
